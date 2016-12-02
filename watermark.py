@@ -11,7 +11,7 @@
 #########################################################
 use_fxfoundry_interface    = 0
 scale_factor               = 0.15 # relative to the smaller edge in the picture
-watermark                  = "/home/phil/path3700.png"
+watermark                  = "/home/phil/signature3.png" #"/home/phil/path3700.png"
 watermark_opacity          = 30.0
 watermark_shadow_opacity   = 35.0
 #########################################################
@@ -46,13 +46,15 @@ def insert_watermark(timg, tdrawable):
     image_aspect = float(width) / float(height)
     watermark_aspect = float(layer_watermark.width) / float(layer_watermark.height)
     if(width < height):
-        new_width = width * scale_factor
-        new_height= new_width / watermark_aspect
-    else:
         new_height = height * scale_factor
-        new_width= new_height / watermark_aspect
+        scale      = new_height / layer_watermark.height 
+        new_width  = layer_watermark.width * scale
+    else:
+        new_width  = width * scale_factor
+        scale      = new_width / layer_watermark.width
+        new_height = layer_watermark.height * scale
     print "image width: %u / height: %u / aspect: %f" % (width, height, image_aspect)
-    print "watermark width: %u  / height: %u  / aspect: %f" % (new_width, new_height, watermark_aspect)
+    print "watermark: width: %u  / height: %u  / aspect: %f" % (new_width, new_height, watermark_aspect)
     pdb.gimp_layer_scale_full(layer_watermark, new_width, new_height, 1, INTERPOLATION_LANCZOS)
     timg.active_layer = layer_watermark
     if use_fxfoundry_interface == 1:
